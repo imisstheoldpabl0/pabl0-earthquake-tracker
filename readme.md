@@ -26,9 +26,9 @@ To get started with the Earthquake Tracker, follow these steps:
 
 2. Navigate to the project directory:
 
-```bash
+   ```bash
    cd pabl0-earthquake-tracker
-```
+   ```
 3. Open the `index.html` file in your web broswer to view the application.
 
 ## Usage
