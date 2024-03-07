@@ -54,8 +54,8 @@ getEarthquakes();
 /* PINTAR EN MAPA */
 async function getLocationUS() {
 
-    let usLat = 34.03028282423628; // se establece la latitud de LA
-    let usLong = -118.26209212548974; // se establece la longitud de LA
+    let usLat = 40.416764775202175; // se establece la latitud de LA
+    let usLong = -3.703364006215899; // se establece la longitud de LA
 
 
 
@@ -79,6 +79,9 @@ async function getLocationUS() {
     let latitudes = [];
     let magnitudes = [];
     let magnitudesRadios = [];
+    let magType = "";
+    let place = "";
+    let depth = [];
 
     for (let i = 0; i < data.length; i++) {
 
@@ -91,8 +94,14 @@ async function getLocationUS() {
 
         magnitudes.push(data[i].properties.mag) // magnitudes
 
+        magnitudesRadios = (data[i].properties.mag) * 70000; // magnitudes adaptadas a radio
 
-        magnitudesRadios = (data[i].properties.mag) * 100000;
+        magType = data[i].properties.magType; // tipo de magnitud
+
+        place = data[i].properties.place; // ubicacion
+
+        depth.push(data[i].geometry.coordinates[2]); // profundidad en km
+
 
         function magnitudColor () {
             if (magnitudes[i] <= 0) {
@@ -102,7 +111,7 @@ async function getLocationUS() {
             } else if (magnitudes[i] > 1 && magnitudes[i] <= 2) {
                 return 'chartreuse';
             } else if (magnitudes[i] > 2 && magnitudes[i] <= 3) {
-                return 'darkolivegreen';
+                return 'darkgreen';
             } else if (magnitudes[i] > 3 && magnitudes[i] <= 4) {
                 return 'gold';
             } else if (magnitudes[i] > 4 && magnitudes[i] <= 5) {
@@ -119,6 +128,7 @@ async function getLocationUS() {
         }
 
         const circle = L.circle([longitudes[i], latitudes[i]], {
+            stroke: false,
             color: magnitudColor(),
             fillColor: magnitudColor(),
             fillOpacity: 0.25,
@@ -128,7 +138,7 @@ async function getLocationUS() {
 
         const popup = L.popup()
             .setLatLng([longitudes[i], latitudes[i]])
-            .setContent(`${titles[i]}, <br> ${dates[i]}, <br> Lat: ${longitudes[i]}, Long: ${latitudes[i]}, <br> ${magnitudesRadios}`)
+            .setContent(`${titles[i]} <br> <b>Fecha:</b> ${dates[i]} <br> <b>Place:</b> ${place} <br> <b>Magnitud:</b> ${magnitudes[i]}${magType}<br><b>Profundidad:</b> ${depth[i]}km`)
             .openOn(map2);
 
         circle.bindPopup(popup)
