@@ -96,7 +96,7 @@ async function drawMap() {
 
         const popup = L.popup()
             .setLatLng([longitudes[i], latitudes[i]])
-            .setContent(`${titles[i]} <br> <b>Fecha:</b> ${dates[i]} <br> <b>Place:</b> ${place} <br> <b>Magnitud:</b> ${magnitudes[i]}${magType}<br><b>Profundidad:</b> ${depth[i]}km`)
+            .setContent(`${titles[i]} <br> <b>Date:</b> ${dates[i]} <br> <b>Place:</b> ${place} <br> <b>Magnitud:</b> ${magnitudes[i]}${magType}<br><b>Depth:</b> ${depth[i]}km`)
             .openOn(map2);
 
         circle.bindPopup(popup)

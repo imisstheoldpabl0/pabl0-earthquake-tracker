@@ -2,6 +2,10 @@
 
 This project utilizes JavaScript and the Leaflet library to display the latest earthquakes registered on Earth.
 
+## Preview
+
+!["Screenshot of the Earthquake Tracker web application displaying a map with circles representing recent earthquakes. Each circle varies in size and color based on the magnitude of the earthquake. The map interface includes markers with additional details such as earthquake title, date, location, magnitude, and depth."](./assets/images/pabl0-earthquake-tracker.png)
+
 ## Table of Contents
 
 - [About](#about)
@@ -48,4 +52,6 @@ The Earthquake Tracker is built using the following technologies:
 ## License
 
 This project is licensed under the MIT License.
+
+
 
