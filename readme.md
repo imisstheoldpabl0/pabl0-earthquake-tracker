@@ -22,3 +22,30 @@ To get started with the Earthquake Tracker, follow these steps:
 
    ```bash
    git clone https://github.com/imisstheoldpabl0/pabl0-world-earthquakes-leaflet
+   ```
+
+2. Navigate to the project directory:
+
+```bash
+   cd pabl0-earthquake-tracker
+```
+3. Open the `index.html` file in your web broswer to view the application.
+
+## Usage
+
+Once the application is loaded, you will see a map displaying earthquake data. Each circle represents an earthquake, with the color and size of the circle indicating the magnitude of the earthquake. Clicking on a circle will display additional information about the earthquake, including its title, date, location, magnitude, and depth.
+
+## Technologies
+
+The Earthquake Tracker is built using the following technologies:
+
+- JavaScript
+- Leaflet
+- ES6
+- HTML
+- CSS
+
+## License
+
+This project is licensed under the MIT License.
+

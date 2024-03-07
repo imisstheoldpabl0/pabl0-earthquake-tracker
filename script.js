@@ -1,45 +1,4 @@
-
-// EJERCICIO 1
-
-function getMyLocation() {
-    navigator.geolocation.getCurrentPosition(position => {
-
-        let myLat = position.coords.latitude; // guarda my latitud
-        let myLong = position.coords.longitude; // guarda mi longitud
-
-        //console.log(myLat, myLong); // saca a consola las posiciones en lat y long
-
-        const map = L.map('map').setView([myLat, myLong], 13); // mapea con las variables guardadas
-
-        // Se rellena el mapa
-        L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_toner_lite/{z}/{x}/{y}{r}.png', { // selecciona la preview que se le pide
-            maxZoom: 25,
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        }).addTo(map);
-
-        L.popup()
-            .setLatLng([myLat, myLong])
-            .setContent("Estás aquí.")
-            .openOn(map);
-
-        var popup = L.popup();
-
-        function onMapClick(e) {
-            popup
-                .setLatLng(e.latlng)
-                .setContent("Has pinchado en: " + e.latlng.toString())
-                .openOn(map);
-        }
-
-        map.on('click', onMapClick);
-    })
-}
-
-getMyLocation();
-
-// EJERCICIO 2
-
-/* TERREMOTOS */
+/* Earthquake Data */
 
 async function getEarthquakes() {
 
@@ -50,28 +9,21 @@ async function getEarthquakes() {
 getEarthquakes();
 
 
+/* FILL THE MAP */
+async function drawMap() {
 
-/* PINTAR EN MAPA */
-async function getLocationUS() {
-
-    let usLat = 40.416764775202175; // se establece la latitud de LA
-    let usLong = -3.703364006215899; // se establece la longitud de LA
-
+    let myLat = 40.416764775202175; // Madrid's Plaza del Sol (km 0) latitude established as map's center
+    let myLong = -3.703364006215899; // Madrid's Plaza del Sol (km 0) longitude established as map's center
 
 
-    // SE RELLENA EL MAPA
-    const map2 = L.map('map2').setView([usLat, usLong], 2); // mapea con las variables guardadas
-    await L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_toner_lite/{z}/{x}/{y}{r}.png', { // selecciona la preview que se le pide
+    /* LEAFLET */
+    const map2 = L.map('map2').setView([myLat, myLong], 2); // Sets the initial view as Madrid
+    await L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_toner_lite/{z}/{x}/{y}{r}.png', { // Layer of personalization to map
         maxZoom: 25,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map2);
 
-    let data = await getEarthquakes();
-
-    console.log(data.length);
-    console.log(data);
-    console.log(data[0]);
-
+    let data = await getEarthquakes(); // Retrieves all data from API
 
     let titles = [];
     let dates = [];
@@ -83,26 +35,29 @@ async function getLocationUS() {
     let place = "";
     let depth = [];
 
+
+    /* Iterates on all data to apply to each earthquake event */
     for (let i = 0; i < data.length; i++) {
 
 
-        titles.push(data[i].properties.title); // titulos
-        dates.push(Date(data[i].properties.time)); // fechas
+        titles.push(data[i].properties.title); // Titles
+        dates.push(Date(data[i].properties.time)); // Dates
 
-        longitudes.push(data[i].geometry.coordinates[1]); // longitudes
-        latitudes.push(data[i].geometry.coordinates[0]); // longitudes
+        longitudes.push(data[i].geometry.coordinates[1]); // Longitudes
+        latitudes.push(data[i].geometry.coordinates[0]); // Latitudes
 
-        magnitudes.push(data[i].properties.mag) // magnitudes
+        magnitudes.push(data[i].properties.mag) // Magnitudes
 
-        magnitudesRadios = (data[i].properties.mag) * 70000; // magnitudes adaptadas a radio
+        magnitudesRadios = (data[i].properties.mag) * 70000; // Magnitudes adapted to define location circle radii
 
-        magType = data[i].properties.magType; // tipo de magnitud
+        magType = data[i].properties.magType; // Magnitude type
 
-        place = data[i].properties.place; // ubicacion
+        place = data[i].properties.place; // Location
 
-        depth.push(data[i].geometry.coordinates[2]); // profundidad en km
+        depth.push(data[i].geometry.coordinates[2]); // Depth in km
 
 
+        /* Declaring circle color depending on magnitude */
         function magnitudColor () {
             if (magnitudes[i] <= 0) {
                 return 'white';
@@ -127,6 +82,7 @@ async function getLocationUS() {
             }
         }
 
+        /* Earthquakes' locations */
         const circle = L.circle([longitudes[i], latitudes[i]], {
             stroke: false,
             color: magnitudColor(),
@@ -135,6 +91,8 @@ async function getLocationUS() {
             radius: magnitudesRadios,
 
         }).addTo(map2);
+
+        /* Popups on location show earthquakes data */
 
         const popup = L.popup()
             .setLatLng([longitudes[i], latitudes[i]])
@@ -147,7 +105,7 @@ async function getLocationUS() {
     console.log(magnitudes);
     }
 
-getLocationUS();
+drawMap();
 
 
 
