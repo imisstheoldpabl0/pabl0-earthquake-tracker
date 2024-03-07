@@ -45,22 +45,6 @@ async function getEarthquakes() {
 
     let terremotos = await fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson')
     let data = await terremotos.json()
-
-    let all = data.features; // FEATURES
-
-    let title = data.features[0].properties.title; // TITULO
-
-    let date = data.features[0].properties.time; // FECHA EVENTO
-    date = Date(date)
-
-    let lat = data.features[0].geometry.coordinates[0]; // LAT
-
-    let long = data.features[0].geometry.coordinates[1]; // LONG
-
-    let mag = data.features[0].properties.mag; // MAGNITUD
-
-
-    //return {all, title, date, lat, long, mag}
     return data.features;
 }
 getEarthquakes();
@@ -88,35 +72,70 @@ async function getLocationUS() {
     console.log(data);
     console.log(data[0]);
 
-    let latitude = data[0].geometry.coordinates[0]; // LAT
-    let longitude = data[0].geometry.coordinates[1]; // LONG
-
-    console.log(latitude);
-    console.log(longitude);
 
     let titles = [];
     let dates = [];
     let longitudes = [];
     let latitudes = [];
     let magnitudes = [];
+    let magnitudesRadios = [];
 
     for (let i = 0; i < data.length; i++) {
+
 
         titles.push(data[i].properties.title); // titulos
         dates.push(Date(data[i].properties.time)); // fechas
 
-        longitudes.push(data[i].geometry.coordinates[0]); // longitudes
-        latitudes.push(data[i].geometry.coordinates[1]); // longitudes
+        longitudes.push(data[i].geometry.coordinates[1]); // longitudes
+        latitudes.push(data[i].geometry.coordinates[0]); // longitudes
 
         magnitudes.push(data[i].properties.mag) // magnitudes
 
+
+        magnitudesRadios = (data[i].properties.mag) * 100000;
+
+        function magnitudColor () {
+            if (magnitudes[i] <= 0) {
+                return 'white';
+            } else if (magnitudes[i] > 0 && magnitudes[i] <= 1) {
+                return 'grey';
+            } else if (magnitudes[i] > 1 && magnitudes[i] <= 2) {
+                return 'chartreuse';
+            } else if (magnitudes[i] > 2 && magnitudes[i] <= 3) {
+                return 'darkolivegreen';
+            } else if (magnitudes[i] > 3 && magnitudes[i] <= 4) {
+                return 'gold';
+            } else if (magnitudes[i] > 4 && magnitudes[i] <= 5) {
+                return 'goldenrod';
+            } else if (magnitudes[i] > 5 && magnitudes[i] <= 6) {
+                return 'orange';
+            } else if (magnitudes[i] > 6 && magnitudes[i] <= 7) {
+                return 'red'
+            } else if (magnitudes[i] > 7) {
+                return 'deeppink';
+            } else {
+                return 'red';
+            }
+        }
+
+        const circle = L.circle([longitudes[i], latitudes[i]], {
+            color: magnitudColor(),
+            fillColor: magnitudColor(),
+            fillOpacity: 0.25,
+            radius: magnitudesRadios,
+
+        }).addTo(map2);
+
+        const popup = L.popup()
+            .setLatLng([longitudes[i], latitudes[i]])
+            .setContent(`${titles[i]}, <br> ${dates[i]}, <br> Lat: ${longitudes[i]}, Long: ${latitudes[i]}, <br> ${magnitudesRadios}`)
+            .openOn(map2);
+
+        circle.bindPopup(popup)
+
     }
-
-    //console.log(magnitudes);
-
-
-
-}
+    console.log(magnitudes);
+    }
 
 getLocationUS();
 
